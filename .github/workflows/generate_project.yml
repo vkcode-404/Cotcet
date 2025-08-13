@@ -1,1 +1,50 @@
+name: Generate project
 
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create scaffolding
+        run: |
+          set -eux
+
+          # README
+          cat > README.md <<'EOF'
+          # ChatApp Go Full
+
+          Полноценный мессенджер scaffold ...
+          (добавь содержимое по желанию)
+          EOF
+
+          # .env.example
+          cat > .env.example <<'EOF'
+          DB_HOST=...
+          EOF
+
+          # docker-compose.yml
+          cat > docker-compose.yml <<'EOF'
+          version: '3.9'
+          ...
+          EOF
+
+          # backend & frontend folders:
+          mkdir -p backend frontend
+          # (можно оставить пустыми, я могу дополнить при необходимости)
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Generate scaffold" || exit 0
+          git push origin main || exit 0
+
+      - name: Done
+        run: echo "Scaffold generated; download via https://github.com/${{ github.repository }}/archive/refs/heads/main.zip"
