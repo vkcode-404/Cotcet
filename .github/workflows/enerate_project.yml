@@ -1,4 +1,4 @@
-name: Generate project
+name: enerate project
 
 permissions:
   contents: write
